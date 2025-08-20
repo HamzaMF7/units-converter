@@ -1,75 +1,235 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { CATEGORIES } from '@/data/units';
+import { useAppStore } from '@/store';
+import { useRouter } from 'expo-router';
+import { Clock, Search, Star } from 'lucide-react-native';
+import React, { useState } from 'react';
+import {
+    FlatList,
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+ export default function  Index ()  {
+  const router = useRouter();
+  const { favorites, history } = useAppStore();
+  const [searchQuery, setSearchQuery] = useState('');
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  const categories = Object.values(CATEGORIES).filter(category =>
+    category.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-}
+
+  const renderCategory = ({ item } : {item : any}) => (
+    <TouchableOpacity
+      style={[styles.categoryCard, { borderLeftColor: item.color }]}
+      onPress={() => router.push(`/converter/${item.id}`)}
+      activeOpacity={0.7}
+    >
+      <View style={styles.categoryContent}>
+        <View style={[styles.iconContainer, { backgroundColor: `${item.color}15` }]}>
+          <Text style={[styles.iconPlaceholder, { color: item.color }]}>
+            {item.icon.slice(0, 2).toUpperCase()}
+          </Text>
+        </View>
+        <Text style={styles.categoryTitle}>{item.name}</Text>
+        <Text style={styles.categorySubtitle}>
+          {item.units.length} units
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const renderQuickAccess = () => (
+    <View style={styles.quickAccess}>
+      <View style={styles.quickAccessSection}>
+        <View style={styles.sectionHeader}>
+          <Star size={18} color="#F59E0B" />
+          <Text style={styles.sectionTitle}>Favorites</Text>
+        </View>
+        <Text style={styles.sectionSubtitle}>
+          {favorites.length} saved pairs
+        </Text>
+      </View>
+      
+      <View style={styles.quickAccessSection}>
+        <View style={styles.sectionHeader}>
+          <Clock size={18} color="#6B7280" />
+          <Text style={styles.sectionTitle}>Recent</Text>
+        </View>
+        <Text style={styles.sectionSubtitle}>
+          {history.length} recent conversions
+        </Text>
+      </View>
+    </View>
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Units Converter</Text>
+        <Text style={styles.subtitle}>Convert between different units</Text>
+      </View>
+
+      <View style={styles.searchContainer}>
+        <Search size={20} color="#6B7280" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search categories..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholderTextColor="#9CA3AF"
+        />
+      </View>
+
+      {renderQuickAccess()}
+
+      <Text style={styles.categoriesTitle}>Categories</Text>
+      
+      <FlatList
+        data={categories}
+        renderItem={renderCategory}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        columnWrapperStyle={styles.row}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.categoriesContainer}
+      />
+    </SafeAreaView>
+  );
+};
+
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: '#FAFAFA',
+  },
+  header: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 16,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#6B7280',
+  },
+  searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    marginHorizontal: 20,
+    marginBottom: 24,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  searchIcon: {
+    marginRight: 12,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  searchInput: {
+    flex: 1,
+    paddingVertical: 14,
+    fontSize: 16,
+    color: '#111827',
+  },
+  quickAccess: {
+    flexDirection: 'row',
+    marginHorizontal: 20,
+    marginBottom: 24,
+    gap: 12,
+  },
+  quickAccessSection: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    padding: 16,
+    borderRadius: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111827',
+    marginLeft: 8,
+  },
+  sectionSubtitle: {
+    fontSize: 14,
+    color: '#6B7280',
+  },
+  categoriesTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#111827',
+    marginHorizontal: 20,
+    marginBottom: 16,
+  },
+  categoriesContainer: {
+    paddingHorizontal: 14,
+    paddingBottom: 20,
+  },
+  row: {
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  categoryCard: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    marginHorizontal: 6,
+    borderLeftWidth: 4,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  categoryContent: {
+    alignItems: 'center',
+  },
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  iconPlaceholder: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  categoryTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#111827',
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  categorySubtitle: {
+    fontSize: 14,
+    color: '#6B7280',
+    textAlign: 'center',
   },
 });
