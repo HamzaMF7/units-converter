@@ -1,15 +1,16 @@
 import { CATEGORIES, UNITS } from '@/data/units';
 import { useConvert } from '@/hooks/useConvert';
-import { useAppStore } from '@/store';
+import { useAppStore, useTheme } from '@/store';
 import { ConversionResult } from '@/types';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ArrowUpDown, Share2, Star } from 'lucide-react-native';
-import React, { useEffect, useState } from 'react';
+import { ArrowUpDown, Share2, Star, X } from 'lucide-react-native';
+import { useEffect, useState } from 'react';
 import {
   Alert,
   FlatList,
+  Modal,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -23,6 +24,7 @@ export default function ConverterScreen(){
   const router = useRouter();
   const { convertToAll } = useConvert();
   const { addToHistory, addFavorite, removeFavorite, favorites } = useAppStore();
+  const { colors } = useTheme(); 
   
   const category = CATEGORIES[categoryId!];
   const categoryUnits = category?.units.map(id => UNITS[id]) || [];
@@ -31,9 +33,247 @@ export default function ConverterScreen(){
   const [fromUnit, setFromUnit] = useState(categoryUnits[0]);
   const [toUnit, setToUnit] = useState(categoryUnits[1] || categoryUnits[0]);
   const [results, setResults] = useState<ConversionResult[]>([]);
+  
+  // Modal state
+  const [modalVisible, setModalVisible] = useState(false);
+  const [pickerType, setPickerType] = useState<'from' | 'to'>('from');
+  const [searchText, setSearchText] = useState('');
 
   const pairId = `${fromUnit?.id}_${toUnit?.id}`;
   const isFavorite = favorites.some(f => f.id === pairId);
+
+  // Filter units based on search
+  const filteredUnits = categoryUnits.filter(unit =>
+    unit.name.toLowerCase().includes(searchText.toLowerCase()) ||
+    unit.symbol.toLowerCase().includes(searchText.toLowerCase())
+  );
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      backgroundColor: colors.surface,
+      elevation: 2,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: '700',
+      color: colors.text,
+    },
+    headerActions: {
+      flexDirection: 'row',
+      gap: 12,
+    },
+    actionButton: {
+      padding: 8,
+    },
+    inputSection: {
+      padding: 20,
+      backgroundColor: colors.surface,
+      marginTop: 8,
+    },
+    mainInput: {
+      fontSize: 32,
+      fontWeight: '600',
+      color: colors.text,
+      textAlign: 'center',
+      padding: 16,
+      backgroundColor: colors.background,
+      borderRadius: 12,
+      borderWidth: 2,
+      borderColor: colors.border,
+    },
+    unitsSection: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      backgroundColor: colors.surface,
+      marginTop: 8,
+    },
+    unitPicker: {
+      flex: 1,
+      backgroundColor: colors.background,
+      padding: 16,
+      borderRadius: 12,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    unitPickerLabel: {
+      fontSize: 12,
+      fontWeight: '600',
+      color: colors.textSecondary,
+      textTransform: 'uppercase',
+      letterSpacing: 0.5,
+      marginBottom: 4,
+    },
+    unitPickerValue: {
+      fontSize: 16,
+      fontWeight: '500',
+      color: colors.text,
+    },
+    swapButton: {
+      marginHorizontal: 16,
+      padding: 12,
+      backgroundColor: colors.primaryLight,
+      borderRadius: 12,
+    },
+    resultsSection: {
+      flex: 1,
+      marginTop: 8,
+      backgroundColor: colors.surface,
+    },
+    resultsTitle: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: colors.text,
+      paddingHorizontal: 20,
+      paddingTop: 20,
+      paddingBottom: 12,
+    },
+    resultsList: {
+      paddingHorizontal: 20,
+      paddingBottom: 20,
+    },
+    resultItem: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: 16,
+      paddingHorizontal: 16,
+      backgroundColor: colors.background,
+      borderRadius: 12,
+      marginBottom: 8,
+    },
+    resultItemHighlighted: {
+      backgroundColor: colors.primaryLight,
+      borderWidth: 2,
+      borderColor: colors.primary,
+    },
+    resultLeft: {
+      flex: 1,
+    },
+    resultSymbol: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: colors.text,
+    },
+    resultName: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginTop: 2,
+    },
+    resultValue: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: colors.text,
+    },
+    resultValueHighlighted: {
+      color: colors.primary,
+    },
+    errorText: {
+      fontSize: 18,
+      color: colors.error,
+      textAlign: 'center',
+      marginTop: 50,
+    },
+    // Modal styles
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modalContent: {
+      backgroundColor: colors.surface,
+      borderRadius: 16,
+      padding: 0,
+      margin: 20,
+      maxHeight: '80%',
+      width: '90%',
+    },
+    modalHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 20,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    modalTitle: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: colors.text,
+    },
+    closeButton: {
+      padding: 4,
+    },
+    searchContainer: {
+      padding: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    searchInput: {
+      backgroundColor: colors.background,
+      borderRadius: 8,
+      padding: 12,
+      fontSize: 16,
+      color: colors.text,
+      borderWidth: 1,
+      borderColor: colors.border,
+    },
+    unitsList: {
+      maxHeight: 400,
+    },
+    unitItem: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+    unitItemSelected: {
+      backgroundColor: colors.primaryLight,
+    },
+    unitInfo: {
+      flex: 1,
+    },
+    unitSymbol: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: colors.text,
+    },
+    unitName: {
+      fontSize: 14,
+      color: colors.textSecondary,
+      marginTop: 2,
+    },
+    selectedIndicator: {
+      width: 20,
+      height: 20,
+      borderRadius: 10,
+      backgroundColor: colors.primary,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    checkmark: {
+      color: 'white',
+      fontSize: 12,
+      fontWeight: 'bold',
+    },
+  });
 
   useEffect(() => {
     if (fromUnit && categoryId) {
@@ -99,13 +339,29 @@ export default function ConverterScreen(){
     }
   };
 
-  const renderUnitPicker = (unit: typeof fromUnit, onSelect: (unit: any) => void, title: string) => (
+  const openUnitPicker = (type: 'from' | 'to') => {
+    setPickerType(type);
+    setSearchText('');
+    setModalVisible(true);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+  };
+
+  const selectUnit = (unit: any) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    
+    if (pickerType === 'from') {
+      setFromUnit(unit);
+    } else {
+      setToUnit(unit);
+    }
+    
+    setModalVisible(false);
+  };
+
+  const renderUnitPicker = (unit: typeof fromUnit, type: 'from' | 'to', title: string) => (
     <TouchableOpacity
       style={styles.unitPicker}
-      onPress={() => {
-        // In a real app, this would open a modal with all units
-        Alert.alert(title, 'Unit picker would open here');
-      }}
+      onPress={() => openUnitPicker(type)}
       activeOpacity={0.7}
     >
       <Text style={styles.unitPickerLabel}>{title}</Text>
@@ -114,6 +370,28 @@ export default function ConverterScreen(){
       </Text>
     </TouchableOpacity>
   );
+
+  const renderUnitItem = ({ item }: { item: any }) => {
+    const isSelected = (pickerType === 'from' ? fromUnit?.id : toUnit?.id) === item.id;
+    
+    return (
+      <TouchableOpacity
+        style={[styles.unitItem, isSelected && styles.unitItemSelected]}
+        onPress={() => selectUnit(item)}
+        activeOpacity={0.7}
+      >
+        <View style={styles.unitInfo}>
+          <Text style={styles.unitSymbol}>{item.symbol}</Text>
+          <Text style={styles.unitName}>{item.name}</Text>
+        </View>
+        {isSelected && (
+          <View style={styles.selectedIndicator}>
+            <Text style={styles.checkmark}>✓</Text>
+          </View>
+        )}
+      </TouchableOpacity>
+    );
+  };
 
   const renderResultItem = ({ item }: { item: ConversionResult }) => (
     <View style={[
@@ -180,7 +458,7 @@ export default function ConverterScreen(){
       </View>
 
       <View style={styles.unitsSection}>
-        {renderUnitPicker(fromUnit, setFromUnit, 'From')}
+        {renderUnitPicker(fromUnit, 'from', 'From')}
         
         <TouchableOpacity
           style={styles.swapButton}
@@ -190,7 +468,7 @@ export default function ConverterScreen(){
           <ArrowUpDown size={24} color="#3B82F6" />
         </TouchableOpacity>
         
-        {renderUnitPicker(toUnit, setToUnit, 'To')}
+        {renderUnitPicker(toUnit, 'to', 'To')}
       </View>
 
       <View style={styles.resultsSection}>
@@ -203,148 +481,50 @@ export default function ConverterScreen(){
           contentContainerStyle={styles.resultsList}
         />
       </View>
+
+      {/* Unit Picker Modal */}
+      <Modal
+        visible={modalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>
+                Select {pickerType === 'from' ? 'From' : 'To'} Unit
+              </Text>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <X size={24} color={colors.text} />
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.searchContainer}>
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Search units..."
+                placeholderTextColor={colors.textSecondary}
+                value={searchText}
+                onChangeText={setSearchText}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+
+            <FlatList
+              style={styles.unitsList}
+              data={filteredUnits}
+              renderItem={renderUnitItem}
+              keyExtractor={(item) => item.id}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FAFAFA',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#111827',
-  },
-  headerActions: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  actionButton: {
-    padding: 8,
-  },
-  inputSection: {
-    padding: 20,
-    backgroundColor: '#FFFFFF',
-    marginTop: 8,
-  },
-  mainInput: {
-    fontSize: 32,
-    fontWeight: '600',
-    color: '#111827',
-    textAlign: 'center',
-    padding: 16,
-    backgroundColor: '#F9FAFB',
-    borderRadius: 12,
-    borderWidth: 2,
-    borderColor: '#E5E7EB',
-  },
-  unitsSection: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
-    marginTop: 8,
-  },
-  unitPicker: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-  },
-  unitPickerLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#6B7280',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 4,
-  },
-  unitPickerValue: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#111827',
-  },
-  swapButton: {
-    marginHorizontal: 16,
-    padding: 12,
-    backgroundColor: '#EFF6FF',
-    borderRadius: 12,
-  },
-  resultsSection: {
-    flex: 1,
-    marginTop: 8,
-    backgroundColor: '#FFFFFF',
-  },
-  resultsTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 12,
-  },
-  resultsList: {
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  resultItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    backgroundColor: '#F9FAFB',
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  resultItemHighlighted: {
-    backgroundColor: '#EFF6FF',
-    borderWidth: 2,
-    borderColor: '#3B82F6',
-  },
-  resultLeft: {
-    flex: 1,
-  },
-  resultSymbol: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
-  },
-  resultName: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginTop: 2,
-  },
-  resultValue: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
-  },
-  resultValueHighlighted: {
-    color: '#3B82F6',
-  },
-  errorText: {
-    fontSize: 18,
-    color: '#EF4444',
-    textAlign: 'center',
-    marginTop: 50,
-  },
-});

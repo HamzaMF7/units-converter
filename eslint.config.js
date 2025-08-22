@@ -7,4 +7,28 @@ module.exports = defineConfig([
   {
     ignores: ['dist/*'],
   },
+  // Jest configuration for test files
+  {
+    files: [
+      '**/__tests__/**/*.[jt]s?(x)',
+      '**/?(*.)+(spec|test).[jt]s?(x)',
+      '**/jest.setup.js'
+    ],
+    languageOptions: {
+      globals: {
+        jest: 'readonly',
+        describe: 'readonly',
+        it: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        beforeAll: 'readonly',
+        afterAll: 'readonly',
+        test: 'readonly',
+      },
+    },
+    rules: {
+      // You can add specific Jest rules here if needed
+    },
+  },
 ]);

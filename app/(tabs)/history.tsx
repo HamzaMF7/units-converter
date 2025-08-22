@@ -1,5 +1,5 @@
 import { CATEGORIES, UNITS } from '@/data/units';
-import { useAppStore } from '@/store';
+import { useAppStore, useTheme } from '@/store';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { ArrowRight, Clock, RotateCcw, Trash2 } from 'lucide-react-native';
@@ -18,6 +18,137 @@ export default function HistoryScreen() {
   const router = useRouter();
   const { history, clearHistory } = useAppStore();
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
+  const {colors } = useTheme() ; 
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+    },
+    header: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      paddingHorizontal: 20,
+      paddingTop: 20,
+      paddingBottom: 16,
+      backgroundColor: colors.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.borderLight,
+    },
+    title: {
+      fontSize: 32,
+      fontWeight: '700',
+      color: colors.text,
+      marginBottom: 4,
+    },
+    subtitle: {
+      fontSize: 16,
+      color: colors.textSecondary,
+    },
+    clearButton: {
+      padding: 12,
+      backgroundColor: colors.errorLight,
+      borderRadius: 12,
+    },
+    listContainer: {
+      padding: 16,
+    },
+    sectionHeader: {
+      marginBottom: 12,
+      marginTop: 8,
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: '600',
+      color: colors.text,
+      marginLeft: 4,
+    },
+    historyItem: {
+      backgroundColor: colors.surface,
+      borderRadius: 12,
+      marginBottom: 8,
+      elevation: 1,
+      shadowColor: '#000', // keep system shadow
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+    },
+    historyContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 16,
+    },
+    categoryDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      marginRight: 12,
+    },
+    historyInfo: {
+      flex: 1,
+    },
+    conversionRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 4,
+    },
+    unitSymbol: {
+      fontSize: 16,
+      fontWeight: '600',
+      color: colors.text,
+    },
+    arrowIcon: {
+      marginHorizontal: 6,
+    },
+    categoryName: {
+      fontSize: 14,
+      color: colors.textSecondary,
+    },
+    historyMeta: {
+      alignItems: 'flex-end',
+    },
+    timeAgo: {
+      fontSize: 12,
+      color: colors.textMuted,
+      marginBottom: 4,
+    },
+    emptyState: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 40,
+    },
+    emptyIconContainer: {
+      marginBottom: 24,
+    },
+    emptyTitle: {
+      fontSize: 24,
+      fontWeight: '700',
+      color: colors.text,
+      marginBottom: 8,
+      textAlign: 'center',
+    },
+    emptySubtitle: {
+      fontSize: 16,
+      color: colors.textSecondary,
+      textAlign: 'center',
+      lineHeight: 24,
+      marginBottom: 32,
+    },
+    emptyButton: {
+      backgroundColor: colors.primary,
+      paddingHorizontal: 24,
+      paddingVertical: 12,
+      borderRadius: 12,
+    },
+    // If you later add an `onPrimary` color to your palette, swap it in here.
+    emptyButtonText: {
+      color: '#FFFFFF',
+      fontSize: 16,
+      fontWeight: '600',
+    },
+  });
 
   const formatTimeAgo = (timestamp: number) => {
     const now = Date.now();
@@ -189,131 +320,131 @@ export default function HistoryScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FAFAFA',
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 16,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: '700',
-    color: '#111827',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#6B7280',
-  },
-  clearButton: {
-    padding: 12,
-    backgroundColor: '#FEF2F2',
-    borderRadius: 12,
-  },
-  listContainer: {
-    padding: 16,
-  },
-  sectionHeader: {
-    marginBottom: 12,
-    marginTop: 8,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#111827',
-    marginLeft: 4,
-  },
-  historyItem: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    marginBottom: 8,
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
-  historyContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-  },
-  categoryDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginRight: 12,
-  },
-  historyInfo: {
-    flex: 1,
-  },
-  conversionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  unitSymbol: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#111827',
-  },
-  arrowIcon: {
-    marginHorizontal: 6,
-  },
-  categoryName: {
-    fontSize: 14,
-    color: '#6B7280',
-  },
-  historyMeta: {
-    alignItems: 'flex-end',
-  },
-  timeAgo: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    marginBottom: 4,
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 40,
-  },
-  emptyIconContainer: {
-    marginBottom: 24,
-  },
-  emptyTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: '#111827',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  emptySubtitle: {
-    fontSize: 16,
-    color: '#6B7280',
-    textAlign: 'center',
-    lineHeight: 24,
-    marginBottom: 32,
-  },
-  emptyButton: {
-    backgroundColor: '#3B82F6',
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 12,
-  },
-  emptyButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-});
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: '#FAFAFA',
+//   },
+//   header: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'flex-start',
+//     paddingHorizontal: 20,
+//     paddingTop: 20,
+//     paddingBottom: 16,
+//     backgroundColor: '#FFFFFF',
+//     borderBottomWidth: 1,
+//     borderBottomColor: '#F3F4F6',
+//   },
+//   title: {
+//     fontSize: 32,
+//     fontWeight: '700',
+//     color: '#111827',
+//     marginBottom: 4,
+//   },
+//   subtitle: {
+//     fontSize: 16,
+//     color: '#6B7280',
+//   },
+//   clearButton: {
+//     padding: 12,
+//     backgroundColor: '#FEF2F2',
+//     borderRadius: 12,
+//   },
+//   listContainer: {
+//     padding: 16,
+//   },
+//   sectionHeader: {
+//     marginBottom: 12,
+//     marginTop: 8,
+//   },
+//   sectionTitle: {
+//     fontSize: 18,
+//     fontWeight: '600',
+//     color: '#111827',
+//     marginLeft: 4,
+//   },
+//   historyItem: {
+//     backgroundColor: '#FFFFFF',
+//     borderRadius: 12,
+//     marginBottom: 8,
+//     elevation: 1,
+//     shadowColor: '#000',
+//     shadowOffset: { width: 0, height: 1 },
+//     shadowOpacity: 0.1,
+//     shadowRadius: 2,
+//   },
+//   historyContent: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     padding: 16,
+//   },
+//   categoryDot: {
+//     width: 8,
+//     height: 8,
+//     borderRadius: 4,
+//     marginRight: 12,
+//   },
+//   historyInfo: {
+//     flex: 1,
+//   },
+//   conversionRow: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     marginBottom: 4,
+//   },
+//   unitSymbol: {
+//     fontSize: 16,
+//     fontWeight: '600',
+//     color: '#111827',
+//   },
+//   arrowIcon: {
+//     marginHorizontal: 6,
+//   },
+//   categoryName: {
+//     fontSize: 14,
+//     color: '#6B7280',
+//   },
+//   historyMeta: {
+//     alignItems: 'flex-end',
+//   },
+//   timeAgo: {
+//     fontSize: 12,
+//     color: '#9CA3AF',
+//     marginBottom: 4,
+//   },
+//   emptyState: {
+//     flex: 1,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//     paddingHorizontal: 40,
+//   },
+//   emptyIconContainer: {
+//     marginBottom: 24,
+//   },
+//   emptyTitle: {
+//     fontSize: 24,
+//     fontWeight: '700',
+//     color: '#111827',
+//     marginBottom: 8,
+//     textAlign: 'center',
+//   },
+//   emptySubtitle: {
+//     fontSize: 16,
+//     color: '#6B7280',
+//     textAlign: 'center',
+//     lineHeight: 24,
+//     marginBottom: 32,
+//   },
+//   emptyButton: {
+//     backgroundColor: '#3B82F6',
+//     paddingHorizontal: 24,
+//     paddingVertical: 12,
+//     borderRadius: 12,
+//   },
+//   emptyButtonText: {
+//     color: '#FFFFFF',
+//     fontSize: 16,
+//     fontWeight: '600',
+//   },
+// });
