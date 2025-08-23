@@ -4,7 +4,6 @@ import { ConversionPair } from '@/types';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { ArrowRight, Heart, Star } from 'lucide-react-native';
-import React from 'react';
 import {
   Alert,
   Animated,
@@ -30,7 +29,7 @@ export default function FavoritesScreen() {
     },
     header: {
       paddingHorizontal: 20,
-      paddingTop: 20,
+      paddingTop: 50,
       paddingBottom: 16,
       backgroundColor: colors.surface,
       borderBottomWidth: 1,
@@ -48,6 +47,7 @@ export default function FavoritesScreen() {
     },
     listContainer: {
       padding: 16,
+      paddingBottom: 90 ,
     },
     favoriteItem: {
       backgroundColor: colors.surface,

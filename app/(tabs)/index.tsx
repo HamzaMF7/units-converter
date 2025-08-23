@@ -2,7 +2,7 @@ import { CATEGORIES } from '@/data/units';
 import { useAppStore, useTheme } from '@/store';
 import { useRouter } from 'expo-router';
 import { Clock, Search, Star } from 'lucide-react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -26,7 +26,7 @@ import {
     },
     header: {
       paddingHorizontal: 20,
-      paddingTop: 20,
+      paddingTop: 50,
       paddingBottom: 16,
     },
     title: {
@@ -43,7 +43,7 @@ import {
       flexDirection: 'row',
       alignItems: 'center',
       marginHorizontal: 20,
-      marginBottom: 24,
+      marginBottom: 20,
       backgroundColor: colors.surface,
       borderRadius: 12,
       paddingHorizontal: 16,
@@ -65,7 +65,7 @@ import {
     quickAccess: {
       flexDirection: 'row',
       marginHorizontal: 20,
-      marginBottom: 24,
+      marginBottom: 20,
       gap: 12,
     },
     quickAccessSection: {
@@ -103,7 +103,7 @@ import {
     },
     categoriesContainer: {
       paddingHorizontal: 14,
-      paddingBottom: 20,
+      paddingBottom: 90,
     },
     row: {
       justifyContent: 'space-between',
@@ -235,134 +235,3 @@ import {
 };
 
 
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#FAFAFA',
-//   },
-//   header: {
-//     paddingHorizontal: 20,
-//     paddingTop: 20,
-//     paddingBottom: 16,
-//   },
-//   title: {
-//     fontSize: 32,
-//     fontWeight: '700',
-//     color: '#111827',
-//     marginBottom: 4,
-//   },
-//   subtitle: {
-//     fontSize: 16,
-//     color: '#6B7280',
-//   },
-//   searchContainer: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     marginHorizontal: 20,
-//     marginBottom: 24,
-//     backgroundColor: '#FFFFFF',
-//     borderRadius: 12,
-//     paddingHorizontal: 16,
-//     elevation: 2,
-//     shadowColor: '#000',
-//     shadowOffset: { width: 0, height: 1 },
-//     shadowOpacity: 0.1,
-//     shadowRadius: 3,
-//   },
-//   searchIcon: {
-//     marginRight: 12,
-//   },
-//   searchInput: {
-//     flex: 1,
-//     paddingVertical: 14,
-//     fontSize: 16,
-//     color: '#111827',
-//   },
-//   quickAccess: {
-//     flexDirection: 'row',
-//     marginHorizontal: 20,
-//     marginBottom: 24,
-//     gap: 12,
-//   },
-//   quickAccessSection: {
-//     flex: 1,
-//     backgroundColor: '#FFFFFF',
-//     padding: 16,
-//     borderRadius: 12,
-//     elevation: 2,
-//     shadowColor: '#000',
-//     shadowOffset: { width: 0, height: 1 },
-//     shadowOpacity: 0.1,
-//     shadowRadius: 3,
-//   },
-//   sectionHeader: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     marginBottom: 4,
-//   },
-//   sectionTitle: {
-//     fontSize: 16,
-//     fontWeight: '600',
-//     color: '#111827',
-//     marginLeft: 8,
-//   },
-//   sectionSubtitle: {
-//     fontSize: 14,
-//     color: '#6B7280',
-//   },
-//   categoriesTitle: {
-//     fontSize: 20,
-//     fontWeight: '600',
-//     color: '#111827',
-//     marginHorizontal: 20,
-//     marginBottom: 16,
-//   },
-//   categoriesContainer: {
-//     paddingHorizontal: 14,
-//     paddingBottom: 20,
-//   },
-//   row: {
-//     justifyContent: 'space-between',
-//     marginBottom: 12,
-//   },
-//   categoryCard: {
-//     flex: 1,
-//     backgroundColor: '#FFFFFF',
-//     borderRadius: 16,
-//     padding: 20,
-//     marginHorizontal: 6,
-//     borderLeftWidth: 4,
-//     elevation: 3,
-//     shadowColor: '#000',
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.1,
-//     shadowRadius: 4,
-//   },
-//   categoryContent: {
-//     alignItems: 'center',
-//   },
-//   iconContainer: {
-//     width: 48,
-//     height: 48,
-//     borderRadius: 24,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     marginBottom: 12,
-//   },
-//   iconPlaceholder: {
-//     fontSize: 16,
-//     fontWeight: '600',
-//   },
-//   categoryTitle: {
-//     fontSize: 18,
-//     fontWeight: '600',
-//     color: '#111827',
-//     marginBottom: 4,
-//     textAlign: 'center',
-//   },
-//   categorySubtitle: {
-//     fontSize: 14,
-//     color: '#6B7280',
-//     textAlign: 'center',
-//   },
-// });

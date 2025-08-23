@@ -1,26 +1,26 @@
 import { useAppStore, useTheme } from '@/store';
 import * as Haptics from 'expo-haptics';
 import {
-    ChevronRight,
-    Download,
-    Globe,
-    Info,
-    Moon,
-    Smartphone,
-    Sun,
-    Trash2,
-    Vibrate
+  ChevronRight,
+  Download,
+  Globe,
+  Info,
+  Moon,
+  Smartphone,
+  Sun,
+  Trash2,
+  Vibrate
 } from 'lucide-react-native';
 import React from 'react';
 import {
-    Alert,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Switch,
-    Text,
-    TouchableOpacity,
-    View
+  Alert,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function SettingsScreen() {
@@ -33,8 +33,9 @@ export default function SettingsScreen() {
     },
     header: {
       paddingHorizontal: 20,
-      paddingTop: 20,
+      paddingTop: 50,
       paddingBottom: 24,
+      marginBottom: 24 ,
       backgroundColor: colors.surface,
       borderBottomWidth: 1,
       borderBottomColor: colors.borderLight,
@@ -352,97 +353,3 @@ export default function SettingsScreen() {
     </SafeAreaView>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#FAFAFA',
-//   },
-//   header: {
-//     paddingHorizontal: 20,
-//     paddingTop: 20,
-//     paddingBottom: 24,
-//     backgroundColor: '#FFFFFF',
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#F3F4F6',
-//   },
-//   title: {
-//     fontSize: 32,
-//     fontWeight: '700',
-//     color: '#111827',
-//     marginBottom: 4,
-//   },
-//   subtitle: {
-//     fontSize: 16,
-//     color: '#6B7280',
-//   },
-//   section: {
-//     marginBottom: 32,
-//   },
-//   sectionTitle: {
-//     fontSize: 18,
-//     fontWeight: '600',
-//     color: '#111827',
-//     marginBottom: 16,
-//     marginHorizontal: 20,
-//   },
-//   sectionContent: {
-//     backgroundColor: '#FFFFFF',
-//   },
-//   settingItem: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     justifyContent: 'space-between',
-//     paddingHorizontal: 20,
-//     paddingVertical: 16,
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#F9FAFB',
-//   },
-//   settingLeft: {
-//     flex: 1,
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   settingIcon: {
-//     width: 32,
-//     height: 32,
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     backgroundColor: '#F3F4F6',
-//     borderRadius: 8,
-//     marginRight: 16,
-//   },
-//   settingText: {
-//     flex: 1,
-//   },
-//   settingTitle: {
-//     fontSize: 16,
-//     fontWeight: '500',
-//     color: '#111827',
-//     marginBottom: 2,
-//   },
-//   settingSubtitle: {
-//     fontSize: 14,
-//     color: '#6B7280',
-//   },
-//   settingRight: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     gap: 12,
-//   },
-//   footer: {
-//     alignItems: 'center',
-//     paddingVertical: 32,
-//     paddingHorizontal: 20,
-//   },
-//   footerText: {
-//     fontSize: 16,
-//     fontWeight: '500',
-//     color: '#111827',
-//     marginBottom: 4,
-//   },
-//   footerSubtext: {
-//     fontSize: 14,
-//     color: '#6B7280',
-//   },
-// });

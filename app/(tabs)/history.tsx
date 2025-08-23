@@ -3,15 +3,15 @@ import { useAppStore, useTheme } from '@/store';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { ArrowRight, Clock, RotateCcw, Trash2 } from 'lucide-react-native';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
-    Alert,
-    FlatList,
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Alert,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 export default function HistoryScreen() {
@@ -30,7 +30,7 @@ export default function HistoryScreen() {
       justifyContent: 'space-between',
       alignItems: 'flex-start',
       paddingHorizontal: 20,
-      paddingTop: 20,
+      paddingTop: 50,
       paddingBottom: 16,
       backgroundColor: colors.surface,
       borderBottomWidth: 1,
@@ -53,6 +53,7 @@ export default function HistoryScreen() {
     },
     listContainer: {
       padding: 16,
+      paddingBottom: 90,
     },
     sectionHeader: {
       marginBottom: 12,
