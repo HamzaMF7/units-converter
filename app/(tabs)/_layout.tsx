@@ -25,7 +25,7 @@ export default function TabLayout() {
           borderRadius: 16,
           borderTopWidth: 0, // remove default hairline
           // subtle outline for light; stronger for dark
-          borderWidth: 2,
+          borderWidth: 1,
           borderColor: isDark ? colors.border : colors.borderLight,
           margin: 10 ,
 
