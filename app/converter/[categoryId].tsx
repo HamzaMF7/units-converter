@@ -1,10 +1,11 @@
 import { CATEGORIES, UNITS } from '@/data/units';
 import { useConvert } from '@/hooks/useConvert';
+import { useHaptics } from '@/hooks/useHaptics';
 import { useAppStore, useTheme } from '@/store';
 import { ConversionResult } from '@/types';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { ArrowUpDown, Share2, Star, X } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import {
@@ -21,10 +22,13 @@ import {
 
 export default function ConverterScreen(){
   const { categoryId } = useLocalSearchParams<{ categoryId: string }>();
-  const router = useRouter();
   const { convertToAll } = useConvert();
-  const { addToHistory, addFavorite, removeFavorite, favorites } = useAppStore();
+  const addToHistory = useAppStore(state => state.addToHistory);
+  const addFavorite = useAppStore(state => state.addFavorite);
+  const removeFavorite = useAppStore(state => state.removeFavorite);
+  const favorites = useAppStore(state => state.favorites);
   const { colors } = useTheme(); 
+  const { impact } = useHaptics();
   
   const category = CATEGORIES[categoryId!];
   const categoryUnits = category?.units.map(id => UNITS[id]) || [];
@@ -295,11 +299,11 @@ export default function ConverterScreen(){
         setResults([]);
       }
     }
-  }, [inputValue, fromUnit, toUnit, categoryId]);
+  }, [inputValue, fromUnit, toUnit, categoryId, convertToAll, addToHistory, pairId]);
 
   const handleSwapUnits = () => {
     if (fromUnit && toUnit) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      impact(Haptics.ImpactFeedbackStyle.Medium);
       setFromUnit(toUnit);
       setToUnit(fromUnit);
     }
@@ -308,7 +312,7 @@ export default function ConverterScreen(){
   const handleFavorite = () => {
     if (!fromUnit || !toUnit) return;
     
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    impact(Haptics.ImpactFeedbackStyle.Light);
     
     if (isFavorite) {
       removeFavorite(pairId);
@@ -335,6 +339,7 @@ export default function ConverterScreen(){
       await Clipboard.setStringAsync(shareText);
       Alert.alert('Copied!', 'Result copied to clipboard');
     } catch (error) {
+      console.error('Failed to copy conversion result to clipboard', error);
       Alert.alert('Error', 'Failed to copy result');
     }
   };
@@ -343,11 +348,11 @@ export default function ConverterScreen(){
     setPickerType(type);
     setSearchText('');
     setModalVisible(true);
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    impact(Haptics.ImpactFeedbackStyle.Light);
   };
 
   const selectUnit = (unit: any) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    impact(Haptics.ImpactFeedbackStyle.Medium);
     
     if (pickerType === 'from') {
       setFromUnit(unit);

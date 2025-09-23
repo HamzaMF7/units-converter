@@ -1,9 +1,9 @@
 import { CATEGORIES, UNITS } from '@/data/units';
+import { useHaptics } from '@/hooks/useHaptics';
 import { useAppStore, useTheme } from '@/store';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import { ArrowRight, Clock, RotateCcw, Trash2 } from 'lucide-react-native';
-import { useState } from 'react';
 import {
   Alert,
   FlatList,
@@ -16,9 +16,10 @@ import {
 
 export default function HistoryScreen() {
   const router = useRouter();
-  const { history, clearHistory } = useAppStore();
-  const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
-  const {colors } = useTheme() ; 
+  const history = useAppStore(state => state.history);
+  const clearHistory = useAppStore(state => state.clearHistory);
+  const { impact } = useHaptics();
+  const { colors } = useTheme();
 
   const styles = StyleSheet.create({
     container: {
@@ -205,7 +206,7 @@ export default function HistoryScreen() {
           text: 'Clear All',
           style: 'destructive',
           onPress: () => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+            impact(Haptics.ImpactFeedbackStyle.Heavy);
             clearHistory();
           }
         }

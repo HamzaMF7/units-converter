@@ -14,6 +14,7 @@ interface AppStore {
   removeFavorite: (id: string) => void;
   addToHistory: (pair: ConversionPair) => void;
   clearHistory: () => void;
+  resetAllData: () => void;
   initializeStore: () => Promise<void>;
 }
 
@@ -90,7 +91,21 @@ export const useAppStore = create<AppStore>((set, get) => ({
   clearHistory: async () => {
     set({ history: [] });
     await setStorageItem('history', []);
-  }
+  },
+
+  resetAllData: async () => {
+    set({
+      settings: defaultSettings,
+      favorites: [],
+      history: [],
+    });
+
+    await Promise.all([
+      setStorageItem('settings', defaultSettings),
+      setStorageItem('favorites', []),
+      setStorageItem('history', []),
+    ]);
+  },
 }));
 
 const getSystemTheme = () => {
@@ -154,5 +169,4 @@ const darkColors = {
   onPrimary: '#FFFFFF',  // white text on blue buttons still works
   onSurface: '#F9FAFB',  // text/icons on dark cards/surfaces
 };
-
 

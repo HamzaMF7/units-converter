@@ -407,7 +407,8 @@ describe('Conversion Engine', () => {
 
       const si = L_100km.toSI(8);
       const result = mpgUS.fromSI(si);
-      expect(result).toBeCloseTo(29.401, 3);
+      // 235.214583 ÷ 8 L/100 km = 29.4018229 mpg (US)
+      expect(result).toBeCloseTo(29.4018, 3);
     });
 
     test('km/L to L/100 km (5 km/L → 20 L/100 km)', () => {

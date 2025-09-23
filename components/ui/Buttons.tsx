@@ -1,3 +1,4 @@
+import { useHaptics } from '@/hooks/useHaptics';
 import * as Haptics from 'expo-haptics';
 import React from 'react';
 import {
@@ -30,9 +31,11 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   textStyle
 }) => {
+  const { impact } = useHaptics();
+
   const handlePress = () => {
     if (!disabled && !loading) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      impact(Haptics.ImpactFeedbackStyle.Light);
       onPress();
     }
   };

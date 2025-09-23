@@ -1,4 +1,5 @@
 import { CATEGORIES, UNITS } from '@/data/units';
+import { useHaptics } from '@/hooks/useHaptics';
 import { useAppStore, useTheme } from '@/store';
 import { ConversionPair } from '@/types';
 import * as Haptics from 'expo-haptics';
@@ -17,10 +18,10 @@ import {
 
 export default function FavoritesScreen() {
   const router = useRouter();
-  const { favorites, removeFavorite } = useAppStore();
-  const {colors} = useTheme() ; 
-
-  console.log("favorites"  ,favorites)
+  const favorites = useAppStore(state => state.favorites);
+  const removeFavorite = useAppStore(state => state.removeFavorite);
+  const { impact } = useHaptics();
+  const { colors } = useTheme();
 
   const styles = StyleSheet.create({
     container: {
@@ -148,7 +149,6 @@ export default function FavoritesScreen() {
   });
 
   const handleRemoveFavorite = (favoriteId: string, fromUnit: string, toUnit: string) => {
-    console.log("favorite id " , favoriteId , fromUnit ,toUnit )  ;
     Alert.alert(
       'Remove Favorite',
       `Remove ${fromUnit} → ${toUnit} from favorites?`,
@@ -158,7 +158,7 @@ export default function FavoritesScreen() {
           text: 'Remove',
           style: 'destructive',
           onPress: () => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            impact(Haptics.ImpactFeedbackStyle.Medium);
             removeFavorite(favoriteId);
           }
         }

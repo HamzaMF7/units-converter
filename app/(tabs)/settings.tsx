@@ -1,3 +1,4 @@
+import { useHaptics } from '@/hooks/useHaptics';
 import { useAppStore, useTheme } from '@/store';
 import * as Haptics from 'expo-haptics';
 import {
@@ -6,6 +7,7 @@ import {
   Globe,
   Info,
   Moon,
+  Shield,
   Smartphone,
   Sun,
   Trash2,
@@ -22,10 +24,15 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function SettingsScreen() {
-  const { settings, updateSettings, clearHistory } = useAppStore();
-  const { colors } = useTheme() ; 
+  const router = useRouter();
+  const settings = useAppStore(state => state.settings);
+  const updateSettings = useAppStore(state => state.updateSettings);
+  const resetAllData = useAppStore(state => state.resetAllData);
+  const { colors } = useTheme();
+  const { impact } = useHaptics();
   const styles =  StyleSheet.create({
     container: {
       flex: 1,
@@ -123,29 +130,32 @@ export default function SettingsScreen() {
 
 
   const handleThemeChange = (newTheme: 'system' | 'light' | 'dark') => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    impact(Haptics.ImpactFeedbackStyle.Light);
     updateSettings({ theme: newTheme });
   };
 
   const handleHapticsToggle = (enabled: boolean) => {
     if (enabled) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(() => {
+        console.warn('Failed to trigger haptics while enabling feedback');
+      });
     }
     updateSettings({ hapticsEnabled: enabled });
   };
 
   const handleAnalyticsToggle = (enabled: boolean) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    impact(Haptics.ImpactFeedbackStyle.Light);
     updateSettings({ analyticsEnabled: enabled });
   };
 
   const handleDecimalFormatToggle = () => {
     const newFormat = settings.decimalFormat === '.' ? ',' : '.';
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    impact(Haptics.ImpactFeedbackStyle.Light);
     updateSettings({ decimalFormat: newFormat });
   };
 
   const handlePrecisionChange = () => {
+    impact(Haptics.ImpactFeedbackStyle.Light);
     Alert.alert(
       'Decimal Precision',
       'Choose the number of decimal places for results',
@@ -169,15 +179,8 @@ export default function SettingsScreen() {
           text: 'Clear All',
           style: 'destructive',
           onPress: () => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-            clearHistory();
-            updateSettings({
-              theme: 'system',
-              decimalFormat: '.',
-              precision: 3,
-              hapticsEnabled: true,
-              analyticsEnabled: false
-            });
+            impact(Haptics.ImpactFeedbackStyle.Heavy);
+            resetAllData();
           }
         }
       ]
@@ -185,11 +188,17 @@ export default function SettingsScreen() {
   };
 
   const handleExportData = () => {
+    impact(Haptics.ImpactFeedbackStyle.Light);
     Alert.alert(
       'Export Data',
       'Feature coming soon! This will allow you to export your favorites and settings as a backup file.',
       [{ text: 'OK' }]
     );
+  };
+
+  const handlePrivacyPolicyPress = () => {
+    impact(Haptics.ImpactFeedbackStyle.Light);
+    router.push('/privacy-policy');
   };
 
   const getThemeIcon = () => {
@@ -320,6 +329,13 @@ export default function SettingsScreen() {
                 trackColor={{ false: '#D1D5DB', true: '#93C5FD' }}
                 thumbColor={settings.analyticsEnabled ? '#3B82F6' : '#F3F4F6'}
               />
+            )}
+            {renderSettingItem(
+              <Shield size={20} color="#111827" />,
+              'Privacy Policy',
+              'Read how we handle your data',
+              null,
+              handlePrivacyPolicyPress
             )}
           </>
         ))}
