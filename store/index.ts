@@ -22,8 +22,7 @@ const defaultSettings: AppSettings = {
   theme: 'system',
   decimalFormat: '.',
   precision: 3,
-  hapticsEnabled: true,
-  analyticsEnabled: false
+  hapticsEnabled: true
 };
 
 // Helper functions for AsyncStorage
@@ -169,4 +168,3 @@ const darkColors = {
   onPrimary: '#FFFFFF',  // white text on blue buttons still works
   onSurface: '#F9FAFB',  // text/icons on dark cards/surfaces
 };
-

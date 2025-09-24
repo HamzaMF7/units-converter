@@ -3,7 +3,6 @@ import { useAppStore, useTheme } from '@/store';
 import * as Haptics from 'expo-haptics';
 import {
   ChevronRight,
-  Download,
   Globe,
   Info,
   Moon,
@@ -143,11 +142,6 @@ export default function SettingsScreen() {
     updateSettings({ hapticsEnabled: enabled });
   };
 
-  const handleAnalyticsToggle = (enabled: boolean) => {
-    impact(Haptics.ImpactFeedbackStyle.Light);
-    updateSettings({ analyticsEnabled: enabled });
-  };
-
   const handleDecimalFormatToggle = () => {
     const newFormat = settings.decimalFormat === '.' ? ',' : '.';
     impact(Haptics.ImpactFeedbackStyle.Light);
@@ -184,15 +178,6 @@ export default function SettingsScreen() {
           }
         }
       ]
-    );
-  };
-
-  const handleExportData = () => {
-    impact(Haptics.ImpactFeedbackStyle.Light);
-    Alert.alert(
-      'Export Data',
-      'Feature coming soon! This will allow you to export your favorites and settings as a backup file.',
-      [{ text: 'OK' }]
     );
   };
 
@@ -320,17 +305,6 @@ export default function SettingsScreen() {
         {renderSettingSection('Privacy', (
           <>
             {renderSettingItem(
-              <Info size={20} color="#111827" />,
-              'Analytics',
-              'Help improve the app with usage data',
-              <Switch
-                value={settings.analyticsEnabled}
-                onValueChange={handleAnalyticsToggle}
-                trackColor={{ false: '#D1D5DB', true: '#93C5FD' }}
-                thumbColor={settings.analyticsEnabled ? '#3B82F6' : '#F3F4F6'}
-              />
-            )}
-            {renderSettingItem(
               <Shield size={20} color="#111827" />,
               'Privacy Policy',
               'Read how we handle your data',
@@ -342,13 +316,6 @@ export default function SettingsScreen() {
 
         {renderSettingSection('Data', (
           <>
-            {renderSettingItem(
-              <Download size={20} color="#111827" />,
-              'Export Data',
-              'Download your favorites and settings',
-              null,
-              handleExportData
-            )}
             {renderSettingItem(
               <Trash2 size={20} color="#EF4444" />,
               'Clear All Data',

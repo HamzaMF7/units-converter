@@ -7,7 +7,13 @@ export default {
     icon: "./assets/images/icon.png",
     scheme: "unitsconverter",
     userInterfaceStyle: "automatic",
-    newArchEnabled: false,
+    
+    plugins : [
+      ["expo-build-properties", {
+        "android": { "newArchEnabled": true },
+        "ios": { "newArchEnabled": true }
+      }]
+    ] , 
 
     extra : {
       eas: {

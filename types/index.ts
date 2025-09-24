@@ -37,5 +37,4 @@ export interface AppSettings {
   decimalFormat: '.' | ',';
   precision: number;
   hapticsEnabled: boolean;
-  analyticsEnabled: boolean;
 }
