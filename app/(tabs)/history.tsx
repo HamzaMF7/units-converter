@@ -7,19 +7,19 @@ import { ArrowRight, Clock, RotateCcw, Trash2 } from 'lucide-react-native';
 import {
   Alert,
   FlatList,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HistoryScreen() {
   const router = useRouter();
   const history = useAppStore(state => state.history);
   const clearHistory = useAppStore(state => state.clearHistory);
   const { impact } = useHaptics();
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
 
   const styles = StyleSheet.create({
     container: {
@@ -49,7 +49,7 @@ export default function HistoryScreen() {
     },
     clearButton: {
       padding: 12,
-      backgroundColor: colors.errorLight,
+      backgroundColor: isDark ? 'rgba(248, 113, 113, 0.18)' : colors.errorLight,
       borderRadius: 12,
     },
     listContainer: {
@@ -144,9 +144,8 @@ export default function HistoryScreen() {
       paddingVertical: 12,
       borderRadius: 12,
     },
-    // If you later add an `onPrimary` color to your palette, swap it in here.
     emptyButtonText: {
-      color: '#FFFFFF',
+      color: colors.onPrimary,
       fontSize: 16,
       fontWeight: '600',
     },
@@ -236,14 +235,14 @@ export default function HistoryScreen() {
           <View style={styles.historyInfo}>
             <View style={styles.conversionRow}>
               <Text style={styles.unitSymbol}>{fromUnit.symbol}</Text>
-              <ArrowRight size={14} color="#9CA3AF" style={styles.arrowIcon} />
+              <ArrowRight size={14} color={colors.textMuted} style={styles.arrowIcon} />
               <Text style={styles.unitSymbol}>{toUnit.symbol}</Text>
             </View>
             <Text style={styles.categoryName}>{category.name}</Text>
           </View>
           <View style={styles.historyMeta}>
             <Text style={styles.timeAgo}>{formatTimeAgo(item.timestamp)}</Text>
-            <RotateCcw size={12} color="#D1D5DB" />
+            <RotateCcw size={12} color={colors.textMuted} />
           </View>
         </View>
       </TouchableOpacity>
@@ -259,7 +258,7 @@ export default function HistoryScreen() {
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
       <View style={styles.emptyIconContainer}>
-        <Clock size={64} color="#E5E7EB" />
+        <Clock size={64} color={colors.borderLight} />
       </View>
       <Text style={styles.emptyTitle}>No history yet</Text>
       <Text style={styles.emptySubtitle}>
@@ -293,7 +292,7 @@ export default function HistoryScreen() {
             onPress={handleClearHistory}
             activeOpacity={0.7}
           >
-            <Trash2 size={20} color="#EF4444" />
+            <Trash2 size={20} color={colors.error} />
           </TouchableOpacity>
         )}
       </View>

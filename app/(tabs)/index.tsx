@@ -1,23 +1,22 @@
 import { CATEGORIES } from '@/data/units';
-import { useAppStore, useTheme } from '@/store';
+import { useTheme } from '@/store';
 import { useRouter } from 'expo-router';
-import { Clock, Search, Star } from 'lucide-react-native';
+import { Search } from 'lucide-react-native';
 import { useState } from 'react';
 import {
   FlatList,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
- export default function  Index ()  {
+export default function Index() {
   const router = useRouter();
-  const { favorites, history } = useAppStore();
   const [searchQuery, setSearchQuery] = useState('');
-  const {colors} = useTheme() ; 
+  const { colors } = useTheme();
 
   const styles = StyleSheet.create({
     container: {
@@ -175,29 +174,7 @@ import {
     </TouchableOpacity>
   );
 
-  const renderQuickAccess = () => (
-    <View style={styles.quickAccess}>
-      <View style={styles.quickAccessSection}>
-        <View style={styles.sectionHeader}>
-          <Star size={18} color="#F59E0B" />
-          <Text style={styles.sectionTitle}>Favorites</Text>
-        </View>
-        <Text style={styles.sectionSubtitle}>
-          {favorites.length} saved pairs
-        </Text>
-      </View>
-      
-      <View style={styles.quickAccessSection}>
-        <View style={styles.sectionHeader}>
-          <Clock size={18} color="#6B7280" />
-          <Text style={styles.sectionTitle}>Recent</Text>
-        </View>
-        <Text style={styles.sectionSubtitle}>
-          {history.length} recent conversions
-        </Text>
-      </View>
-    </View>
-  );
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -207,17 +184,15 @@ import {
       </View>
 
       <View style={styles.searchContainer}>
-        <Search size={20} color="#6B7280" style={styles.searchIcon} />
+        <Search size={20} color={colors.textMuted} style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
           placeholder="Search categories..."
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor={colors.textMuted}
         />
       </View>
-
-      {renderQuickAccess()}
 
       <Text style={styles.categoriesTitle}>Categories</Text>
       
@@ -233,5 +208,3 @@ import {
     </SafeAreaView>
   );
 };
-
-

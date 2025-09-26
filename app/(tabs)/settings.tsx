@@ -15,7 +15,6 @@ import {
 import React from 'react';
 import {
   Alert,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Switch,
@@ -23,6 +22,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 
 export default function SettingsScreen() {
@@ -188,9 +188,9 @@ export default function SettingsScreen() {
 
   const getThemeIcon = () => {
     switch (settings.theme) {
-      case 'dark': return <Moon size={20} color="#111827" />;
-      case 'light': return <Sun size={20} color="#111827" />;
-      default: return <Smartphone size={20} color="#111827" />;
+      case 'dark': return <Moon size={20} color={colors.onSurface} />;
+      case 'light': return <Sun size={20} color={colors.onSurface} />;
+      default: return <Smartphone size={20} color={colors.onSurface} />;
     }
   };
 
@@ -233,7 +233,7 @@ export default function SettingsScreen() {
       </View>
       <View style={styles.settingRight}>
         {rightComponent}
-        {onPress && <ChevronRight size={16} color="#9CA3AF" />}
+        {onPress && <ChevronRight size={16} color={colors.textMuted} />}
       </View>
     </TouchableOpacity>
   );
@@ -270,14 +270,14 @@ export default function SettingsScreen() {
         {renderSettingSection('Conversion', (
           <>
             {renderSettingItem(
-              <Globe size={20} color="#111827" />,
+              <Globe size={20} color={colors.onSurface} />,
               'Decimal Format',
               `Using "${settings.decimalFormat}" as decimal separator`,
               null,
               handleDecimalFormatToggle
             )}
             {renderSettingItem(
-              <Info size={20} color="#111827" />,
+              <Info size={20} color={colors.onSurface} />,
               'Precision',
               `Showing ${settings.precision} decimal places`,
               null,
@@ -289,14 +289,14 @@ export default function SettingsScreen() {
         {renderSettingSection('Experience', (
           <>
             {renderSettingItem(
-              <Vibrate size={20} color="#111827" />,
+              <Vibrate size={20} color={colors.onSurface} />,
               'Haptic Feedback',
               'Vibrate on button taps and gestures',
               <Switch
                 value={settings.hapticsEnabled}
                 onValueChange={handleHapticsToggle}
-                trackColor={{ false: '#D1D5DB', true: '#93C5FD' }}
-                thumbColor={settings.hapticsEnabled ? '#3B82F6' : '#F3F4F6'}
+                trackColor={{ false: colors.borderLight, true: colors.primary }}
+                thumbColor={settings.hapticsEnabled ? colors.primary : colors.surface}
               />
             )}
           </>
@@ -305,7 +305,7 @@ export default function SettingsScreen() {
         {renderSettingSection('Privacy', (
           <>
             {renderSettingItem(
-              <Shield size={20} color="#111827" />,
+              <Shield size={20} color={colors.onSurface} />,
               'Privacy Policy',
               'Read how we handle your data',
               null,
@@ -317,7 +317,7 @@ export default function SettingsScreen() {
         {renderSettingSection('Data', (
           <>
             {renderSettingItem(
-              <Trash2 size={20} color="#EF4444" />,
+              <Trash2 size={20} color={colors.error} />,
               'Clear All Data',
               'Remove all favorites, history, and reset settings',
               null,

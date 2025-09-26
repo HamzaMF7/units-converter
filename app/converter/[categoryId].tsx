@@ -12,13 +12,13 @@ import {
   Alert,
   FlatList,
   Modal,
-  SafeAreaView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ConverterScreen(){
   const { categoryId } = useLocalSearchParams<{ categoryId: string }>();
@@ -27,7 +27,7 @@ export default function ConverterScreen(){
   const addFavorite = useAppStore(state => state.addFavorite);
   const removeFavorite = useAppStore(state => state.removeFavorite);
   const favorites = useAppStore(state => state.favorites);
-  const { colors } = useTheme(); 
+  const { colors } = useTheme();
   const { impact } = useHaptics();
   
   const category = CATEGORIES[categoryId!];
@@ -436,8 +436,8 @@ export default function ConverterScreen(){
           >
             <Star
               size={24}
-              color={isFavorite ? '#F59E0B' : '#6B7280'}
-              fill={isFavorite ? '#F59E0B' : 'transparent'}
+              color={isFavorite ? colors.warning : colors.textMuted}
+              fill={isFavorite ? colors.warning : 'transparent'}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -445,7 +445,7 @@ export default function ConverterScreen(){
             onPress={handleShare}
             activeOpacity={0.7}
           >
-            <Share2 size={24} color="#6B7280" />
+            <Share2 size={24} color={colors.textMuted} />
           </TouchableOpacity>
         </View>
       </View>
@@ -470,7 +470,7 @@ export default function ConverterScreen(){
           onPress={handleSwapUnits}
           activeOpacity={0.7}
         >
-          <ArrowUpDown size={24} color="#3B82F6" />
+          <ArrowUpDown size={24} color={colors.primary} />
         </TouchableOpacity>
         
         {renderUnitPicker(toUnit, 'to', 'To')}

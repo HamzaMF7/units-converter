@@ -4,8 +4,7 @@ import { Clock, Home, Settings, Star } from 'lucide-react-native';
 import { Platform } from 'react-native';
 
 export default function TabLayout() {
-
-  const { colors , isDark } = useTheme() ;
+  const { colors, isDark } = useTheme();
   return (
     <Tabs
       screenOptions={{

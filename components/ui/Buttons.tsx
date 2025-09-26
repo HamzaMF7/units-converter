@@ -1,13 +1,14 @@
 import { useHaptics } from '@/hooks/useHaptics';
+import { useTheme } from '@/store';
 import * as Haptics from 'expo-haptics';
 import React from 'react';
 import {
-    ActivityIndicator,
-    StyleSheet,
-    Text,
-    TextStyle,
-    TouchableOpacity,
-    ViewStyle
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextStyle,
+  TouchableOpacity,
+  ViewStyle
 } from 'react-native';
 
 interface ButtonProps {
@@ -32,6 +33,7 @@ export const Button: React.FC<ButtonProps> = ({
   textStyle
 }) => {
   const { impact } = useHaptics();
+  const { colors, isDark } = useTheme();
 
   const handlePress = () => {
     if (!disabled && !loading) {
@@ -40,12 +42,53 @@ export const Button: React.FC<ButtonProps> = ({
     }
   };
 
+  const variantContainerStyle = React.useMemo(() => {
+    switch (variant) {
+      case 'secondary':
+        return {
+          backgroundColor: colors.surface,
+          borderWidth: 1,
+          borderColor: colors.border,
+        };
+      case 'ghost':
+        return {
+          backgroundColor: 'transparent',
+        };
+      case 'primary':
+      default:
+        return {
+          backgroundColor: colors.primary,
+          elevation: 2,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: isDark ? 0.35 : 0.15,
+          shadowRadius: 6,
+        };
+    }
+  }, [colors.primary, colors.surface, colors.border, variant, isDark]);
+
+  const variantTextColor = React.useMemo(() => {
+    switch (variant) {
+      case 'secondary':
+        return colors.text;
+      case 'ghost':
+        return colors.primary;
+      case 'primary':
+      default:
+        return colors.onPrimary;
+    }
+  }, [colors.onPrimary, colors.primary, colors.text, variant]);
+
+  const spinnerColor = React.useMemo(() => (
+    variant === 'primary' ? colors.onPrimary : colors.primary
+  ), [variant, colors.onPrimary, colors.primary]);
+
   return (
     <TouchableOpacity
       style={[
         styles.base,
-        styles[variant],
         styles[size],
+        variantContainerStyle,
         (disabled || loading) && styles.disabled,
         style
       ]}
@@ -54,9 +97,9 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={disabled || loading}
     >
       {loading ? (
-        <ActivityIndicator size="small" color="#FFFFFF" />
+        <ActivityIndicator size="small" color={spinnerColor} />
       ) : (
-        <Text style={[styles.text, styles[`${variant}Text`], textStyle]}>
+        <Text style={[styles.text, { color: variantTextColor }, textStyle]}>
           {title}
         </Text>
       )}
@@ -70,22 +113,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
-  },
-  primary: {
-    backgroundColor: '#3B82F6',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  secondary: {
-    backgroundColor: '#F3F4F6',
-    borderWidth: 1,
-    borderColor: '#D1D5DB',
-  },
-  ghost: {
-    backgroundColor: 'transparent',
   },
   sm: {
     paddingHorizontal: 12,
@@ -108,14 +135,5 @@ const styles = StyleSheet.create({
   text: {
     fontWeight: '600',
     fontSize: 16,
-  },
-  primaryText: {
-    color: '#FFFFFF',
-  },
-  secondaryText: {
-    color: '#374151',
-  },
-  ghostText: {
-    color: '#3B82F6',
   },
 });

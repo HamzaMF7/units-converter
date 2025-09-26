@@ -130,41 +130,39 @@ export const useTheme = () => {
 
 // color schemes
 const lightColors = {
-  background: '#FAFAFA',
+  background: '#F5F7FA',
   surface: '#FFFFFF',
-  text: '#111827',
-  textSecondary: '#6B7280',
-  textMuted: '#9CA3AF',
-  border: '#E5E7EB',
-  borderLight: '#F3F4F6',
-  primary: '#3B82F6',
-  primaryLight: '#EFF6FF',
-  success: '#10B981',
-  warning: '#F59E0B',
-  error: '#EF4444',
-  errorLight: '#FEF2F2',
+  text: '#1F2937',
+  textSecondary: '#475467',
+  textMuted: '#98A2B3',
+  border: '#D0D5DD',
+  borderLight: '#E4E7EC',
+  primary: '#2563EB',
+  primaryLight: '#E0EAFF',
+  success: '#16A34A',
+  warning: '#F79009',
+  error: '#D92D20',
+  errorLight: '#FEE4E2',
 
-  // 🔑 new additions
-  onPrimary: '#FFFFFF',  // text/icons on primary buttons
-  onSurface: '#111827',  // text/icons on surfaces/cards
+  onPrimary: '#FFFFFF',
+  onSurface: '#1F2937',
 };
 
 const darkColors = {
-  background: '#111827',
-  surface: '#1F2937',
-  text: '#F9FAFB',
-  textSecondary: '#D1D5DB',
-  textMuted: '#9CA3AF',
-  border: '#374151',
-  borderLight: '#4B5563',
-  primary: '#60A5FA',
-  primaryLight: '#1E3A8A',
-  success: '#34D399',
-  warning: '#FBBF24',
+  background: '#0F172A',
+  surface: '#1E293B',
+  text: '#E2E8F0',
+  textSecondary: '#94A3B8',
+  textMuted: '#64748B',
+  border: '#334155',
+  borderLight: '#475569',
+  primary: '#4F83F1',
+  primaryLight: '#1D4ED8',
+  success: '#22C55E',
+  warning: '#FACC15',
   error: '#F87171',
-  errorLight: '#7F1D1D',
+  errorLight: '#4A1D1F',
 
-  // 🔑 new additions
-  onPrimary: '#FFFFFF',  // white text on blue buttons still works
-  onSurface: '#F9FAFB',  // text/icons on dark cards/surfaces
+  onPrimary: '#FFFFFF',
+  onSurface: '#E2E8F0',
 };

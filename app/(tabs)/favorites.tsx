@@ -9,12 +9,12 @@ import {
   Alert,
   Animated,
   FlatList,
-  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function FavoritesScreen() {
   const router = useRouter();
@@ -224,7 +224,7 @@ export default function FavoritesScreen() {
           <View style={styles.favoriteInfo}>
             <View style={styles.conversionRow}>
               <Text style={styles.unitSymbol}>{fromUnit.symbol}</Text>
-              <ArrowRight size={16} color="#6B7280" style={styles.arrowIcon} />
+              <ArrowRight size={16} color={colors.textMuted} style={styles.arrowIcon} />
               <Text style={styles.unitSymbol}>{toUnit.symbol}</Text>
             </View>
             <Text style={styles.unitNames}>
@@ -243,7 +243,7 @@ export default function FavoritesScreen() {
             )}
           activeOpacity={0.7}
         >
-          <Star size={20} color="#F59E0B" fill="#F59E0B" />
+          <Star size={20} color={colors.warning} fill={colors.warning} />
         </TouchableOpacity>
       </View>
     </Animated.View>
@@ -253,7 +253,7 @@ export default function FavoritesScreen() {
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
       <View style={styles.emptyIconContainer}>
-        <Heart size={64} color="#E5E7EB" />
+        <Heart size={64} color={colors.borderLight} />
       </View>
       <Text style={styles.emptyTitle}>No favorites yet</Text>
       <Text style={styles.emptySubtitle}>
@@ -293,126 +293,3 @@ export default function FavoritesScreen() {
     </SafeAreaView>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#FAFAFA',
-//   },
-//   header: {
-//     paddingHorizontal: 20,
-//     paddingTop: 20,
-//     paddingBottom: 16,
-//     backgroundColor: '#FFFFFF',
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#F3F4F6',
-//   },
-//   title: {
-//     fontSize: 32,
-//     fontWeight: '700',
-//     color: '#111827',
-//     marginBottom: 4,
-//   },
-//   subtitle: {
-//     fontSize: 16,
-//     color: '#6B7280',
-//   },
-//   listContainer: {
-//     padding: 16,
-//   },
-//   favoriteItem: {
-//     backgroundColor: '#FFFFFF',
-//     borderRadius: 16,
-//     elevation: 2,
-//     shadowColor: '#000',
-//     shadowOffset: { width: 0, height: 2 },
-//     shadowOpacity: 0.1,
-//     shadowRadius: 4,
-//   },
-//   favoriteContent: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     padding: 16,
-//   },
-//   favoriteLeft: {
-//     flex: 1,
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//   },
-//   categoryIndicator: {
-//     width: 4,
-//     height: 48,
-//     borderRadius: 2,
-//     marginRight: 16,
-//   },
-//   favoriteInfo: {
-//     flex: 1,
-//   },
-//   conversionRow: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     marginBottom: 4,
-//   },
-//   unitSymbol: {
-//     fontSize: 18,
-//     fontWeight: '600',
-//     color: '#111827',
-//   },
-//   arrowIcon: {
-//     marginHorizontal: 8,
-//   },
-//   unitNames: {
-//     fontSize: 14,
-//     color: '#6B7280',
-//     marginBottom: 2,
-//   },
-//   categoryName: {
-//     fontSize: 12,
-//     color: '#9CA3AF',
-//     textTransform: 'uppercase',
-//     letterSpacing: 0.5,
-//     fontWeight: '500',
-//   },
-//   removeButton: {
-//     padding: 12,
-//     borderRadius: 12,
-//     backgroundColor: '#FEF3C7',
-//   },
-//   separator: {
-//     height: 12,
-//   },
-//   emptyState: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     paddingHorizontal: 40,
-//   },
-//   emptyIconContainer: {
-//     marginBottom: 24,
-//   },
-//   emptyTitle: {
-//     fontSize: 24,
-//     fontWeight: '700',
-//     color: '#111827',
-//     marginBottom: 8,
-//     textAlign: 'center',
-//   },
-//   emptySubtitle: {
-//     fontSize: 16,
-//     color: '#6B7280',
-//     textAlign: 'center',
-//     lineHeight: 24,
-//     marginBottom: 32,
-//   },
-//   emptyButton: {
-//     backgroundColor: '#3B82F6',
-//     paddingHorizontal: 24,
-//     paddingVertical: 12,
-//     borderRadius: 12,
-//   },
-//   emptyButtonText: {
-//     color: '#FFFFFF',
-//     fontSize: 16,
-//     fontWeight: '600',
-//   },
-// });
